@@ -1,8 +1,8 @@
 <template>
   <div id="chartDom" class="chart"></div>
 </template>
-<!-- 折线图 -->
-<script>
+  <!-- 折线图 -->
+  <script>
 import { inject, onMounted } from "vue";
 import jsonData from "../assets/beijing.json";
 import bus from "./eventBus.js";
@@ -109,14 +109,15 @@ export default {
   },
 };
 </script>
-
-<style scope>
+  
+  <style scope>
 #chartDom {
   /* 高度360 */
   /*margin-top: 0.2rem;*/
-  height: 4rem;
+  height: 6rem;
   padding: 0px;
   background-color: transparent;
   text-align: center;
 }
 </style>
+  

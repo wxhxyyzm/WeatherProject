@@ -1,15 +1,35 @@
 <template>
   <div class="allin">
-    <!-- 气温图 -->
+    <!-- 三个气温图 -->
     <div id="chartDomw" class="chart"></div>
   </div>
 </template>
   <!-- 折线图 -->
   <script>
 import { inject, onMounted } from "vue";
+import bus from "./eventBus.js";
 import jsonData from "../assets/beijing.json";
+import echarts from "echarts";
 
 export default {
+  name: "Bro6",
+  data() {
+    return {
+      tempvalue: {
+        TREASURE_DATE: [],
+        MAX_TEMPERATURE: [], //最高温
+        MIN_TEMPERATURE: [], //最低温
+        TEMP: [], //平均气温
+      },
+    };
+  },
+  created() {
+    // bus.on 方法注册一个自定义事件，通过事件的处理函数形参接收数据
+    bus.on("broSendMsgTemp", (val) => {
+      this.tempvalue = val;
+      console.log(this.windvalue);
+    });
+  },
   setup() {
     // 得到echarts对象
     let $echarts = inject("echarts");
@@ -29,14 +49,21 @@ export default {
 
       myChart.setOption({
         //title属性
+        textStyle: {
+          color: "white", // 设置文字颜色为红色
+        },
         title: {
           text: "该地区气温折线图",
           x: "center",
+          textStyle: {
+            color: "white", // 设置文字颜色为红色
+          },
+          padding: [20, 0, 0, 0],
         },
         grid: {
           left: "2%",
           right: "5%",
-          bottom: "15%",
+          bottom: "10%",
         },
         xAxis: {
           type: "category",
@@ -119,16 +146,125 @@ export default {
       });
     });
   },
+  watch: {
+    tempvalue: function (newvalue, oldvalue) {
+      if (oldvalue !== newvalue) {
+        var echarts = require("echarts");
+        var yChart = echarts.init(document.getElementById("chartDomw"));
+        const xdata = this.tempvalue["TREASURE_DATE"];
+        const ydata = this.tempvalue["MAX_TEMPERATURE"];
+        const y2data = this.tempvalue["MIN_TEMPERATURE"];
+        const y3data = this.tempvalue["TEMP"];
+        yChart.setOption({
+          //title属性
+          textStyle: {
+            color: "white", // 设置文字颜色为红色
+          },
+          title: {
+            text: "该地区气温折线图",
+            x: "center",
+            textStyle: {
+              color: "white", // 设置文字颜色为红色
+            },
+          },
+          xAxis: {
+            type: "category",
+            data: xdata,
+          },
+          yAxis: {
+            type: "value",
+          },
+          toolbox: {
+            right: 10,
+            feature: {
+              restore: {},
+              saveAsImage: {},
+            },
+          },
+          dataZoom: [
+            {
+              startValue: "2023/1/1",
+            },
+            {
+              type: "inside",
+            },
+          ],
+          visualMap: {
+            top: 50,
+            right: 10,
+            pieces: [
+              {
+                gt: 0,
+                lte: 20,
+                color: "#93CE07",
+              },
+              {
+                gt: 20,
+                lte: 40,
+                color: "#FBDB0F",
+              },
+              {
+                gt: 40,
+                lte: 60,
+                color: "#FC7D02",
+              },
+              {
+                gt: 60,
+                lte: 80,
+                color: "#FD0100",
+              },
+              {
+                gt: 80,
+                lte: 100,
+                color: "#AA069F",
+              },
+              {
+                gt: 100,
+                color: "#AC3B2A",
+              },
+            ],
+            outOfRange: {
+              color: "#999",
+            },
+            textstyle: {
+              normal: {
+                color: "white", // 设置 VisualMap 组件最右侧标签文本颜色为白色
+              },
+            },
+          },
+
+          series: [
+            {
+              data: ydata, // 底部线条数据
+              type: "line",
+              smooth: true, // 平滑过渡
+              markPoint: {
+                data: [],
+              },
+            },
+            {
+              data: y2data, // 上部线条数据
+              type: "line",
+              smooth: true, // 平滑过渡
+              markPoint: {
+                data: [],
+              },
+            },
+          ],
+        });
+      }
+    },
+  },
 };
 </script>
-  
+
 <style scope>
 #chartDomw {
   /* 高度360 */
   /*margin-top: 0.2rem;*/
-  height: 4rem;
+  height: 28vh;
   padding: 0px;
-  background-color: transparent;
   text-align: center;
+  background-color: rgba(240, 231, 231, 0.1);
 }
 </style>

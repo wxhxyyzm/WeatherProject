@@ -1,4 +1,5 @@
 <template>
+  <navbar />
   <router-view />
 </template>
 <script>
@@ -6,7 +7,7 @@ import { provide } from "vue";
 import * as echarts from "echarts";
 import axios from "axios";
 import elementPlus from "element-plus";
-
+import navbar from "./components/navbar.vue";
 export default {
   setup() {
     //provide("mingzi","chuandi")
@@ -14,11 +15,14 @@ export default {
     provide("axios", axios);
     provide("elementPlus", elementPlus);
   },
+  components: {
+    navbar,
+  },
 };
 </script>
 <style>
 body {
-  background: url("~@/assets/bg2.svg");
+  background: url("~@/assets/bg.svg");
   background-size: 100% auto;
 }
 * {

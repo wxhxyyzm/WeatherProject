@@ -1,14 +1,20 @@
 <template>
   <div class="map" id="cnmap">map</div>
 </template>
-  
-  <script>
+
+<script>
 // 1.引用
 import { onMounted, reactive, inject } from "vue";
+// 导入 VisualMap 组件
+import { VisualMapComponent } from "echarts";
 // 导入地图数据
 import mapData from "../assets/china.json";
 
 export default {
+  components: {
+    // 注册 VisualMap 组件
+    VisualMapComponent,
+  },
   setup() {
     // 2.得到echarts
     let $echarts = inject("echarts");
@@ -23,11 +29,15 @@ export default {
       $echarts.registerMap("china", mapDataReactive);
       var chart = $echarts.init(document.getElementById("cnmap"));
       chart.setOption({
-        //backgroundColor: "#404a59", // 设置背景色
+        grid: {
+          left: "10%",
+          bottom: "25%",
+        },
         geo: {
           map: "china",
           roam: true, // 开启缩放和平移
-          zoom: 1.2, // 初始缩放比例
+          zoom: 1.6, // 初始缩放比例
+          center: [104.195397, 35.86166],
           label: {
             emphasis: {
               show: false,
@@ -36,7 +46,7 @@ export default {
           itemStyle: {
             // 定制地图的样式
             normal: {
-              areaColor: "#323c48",
+              areaColor: "#FFFFFF",
               borderColor: "#111",
             },
             emphasis: {
@@ -44,14 +54,28 @@ export default {
             },
           },
         },
+        // 使用 VisualMap 组件设置渐变颜色
+        visualMap: {
+          min: 0,
+          max: 100,
+          inRange: {
+            color: ["#e0ffff", "#006edd"],
+          },
+          textStyle: {
+            color: "white",
+          },
+        },
         series: [
           {
             type: "map",
             map: "china",
             geoIndex: 0,
-            aspectScale: 0.75, // 长宽比
-            showLegendSymbol: false, // 去除地图指示小红点
+            aspectScale: 0.75,
+            showLegendSymbol: false,
             roam: true,
+            data: [
+              // 其他区域的数据
+            ],
             itemStyle: {
               normal: {
                 areaColor: "#031525",
@@ -75,12 +99,12 @@ export default {
   },
 };
 </script>
-  
-  <style>
+
+<style>
 .map {
   padding: 0.3rem;
   margin: 0.3rem;
-  border: 1px solid black;
   height: 6.5rem;
+  border: 2px solid white;
 }
 </style>

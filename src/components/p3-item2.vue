@@ -4,8 +4,8 @@
     <div id="chartDomy" class="chart"></div>
   </div>
 </template>
-  <!-- 折线图 -->
-  <script>
+    <!-- 折线图 -->
+    <script>
 import { inject, onMounted } from "vue";
 import jsonData from "../assets/beijing.json";
 import bus from "./eventBus.js";
@@ -208,14 +208,15 @@ export default {
   },
 };
 </script>
-
-  <style scope>
+  
+    <style scope>
 #chartDomy {
   /* 高度360 */
   /* height: 3.9rem; */
   /*margin-top: 0.2rem;*/
-  height: 4rem;
+  height: 6rem;
   padding: 0px;
   background-color: transparent;
 }
 </style>
+  
