@@ -19,7 +19,7 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/p2'
+    redirect: '/p1'
   }
 ]
 

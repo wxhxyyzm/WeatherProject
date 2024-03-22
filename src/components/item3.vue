@@ -6,6 +6,7 @@
 import { inject, onMounted } from "vue";
 import jsonData from "../assets/beijing.json";
 import bus from "./eventBus.js";
+import {roma} from "../assets/roma.js";
 import echarts from "echarts";
 export default {
   name: "Bro4",
@@ -32,7 +33,7 @@ export default {
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDomdx"));
+      let myChart = $echarts.init(document.getElementById("chartDomdx"),roma);
       // 绘制图表
       //let xdata = ["1", "2", "3", "4", "5", "6", "7"];
       //let ydata = [820, 932, 901, 934, 1290, 1330, 1320];
@@ -64,7 +65,17 @@ export default {
               pixelRatio: 2,
             },
           },
-        },
+        },tooltip: {
+  trigger: 'axis',
+  axisPointer: {
+    type: 'cross',
+    animation: false,
+    label: {
+      backgroundColor: '#505765'
+    }
+  }
+},
+        
         dataZoom: [
           {
             show: false,
@@ -81,41 +92,36 @@ export default {
           type: "value",
         },
         legend: {
-          data: ["平均风速", "最大持续风速"],
+          data: ["最大持续风速","平均风速","最大阵风"],
+          left:0,
+          top:22,
         },
         series: [
-          {
-            data: y2data,
-            type: "line",
-            smooth: true, //平滑过渡
-            areaStyle: {},
-            markPoint: {
-              data: [
-                {
-                  type: "max",
-                  name: "最大值",
-                  label: {
-                    show: true,
-                    formatter: "{b}: {c}",
-                  },
-                },
-                {
-                  type: "min",
-                  name: "最小值",
-                  label: {
-                    show: true,
-                    formatter: "{b}: {c}",
-                  },
-                },
-              ],
-            },
-          },
-
-          {
-            data: ydata,
-            type: "bar",
-          },
-        ],
+    {
+      name: '最大持续风速',
+      type: 'bar',
+      data: ydata,
+      markLine: {
+        data: [{ type: 'average', name: 'Avg' }]
+      }
+    },
+    {
+      name: '平均风速',
+      type: 'bar',
+      data: y2data,
+      markLine: {
+        data: [{ type: 'average', name: 'Avg' }]
+      }
+    },
+    {
+      name: '最大阵风',
+      type: 'bar',
+      data: y3data,
+      markLine: {
+        data: [{ type: 'average', name: 'Avg' }]
+      }
+    }
+  ]
       });
     });
   },

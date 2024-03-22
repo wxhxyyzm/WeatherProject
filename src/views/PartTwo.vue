@@ -1,28 +1,30 @@
 <template>
-  <div></div>
+  <div class="p2body">
+    <navbar />
 
-  <section class="container">
-    <section class="container-top">
-      <section class="top-left">
-        <item><item1 /></item>
-        <item><item2 /></item>
+    <section class="container">
+      <section class="container-top">
+        <section class="top-left">
+          <item><item1 /></item>
+          <item><item2 /></item>
+        </section>
+        <section class="top-mid">
+          <div class="timeselect-container">
+            <timeselect></timeselect>
+          </div>
+          <div class="map-container"><cnmap></cnmap></div>
+        </section>
+        <section class="top-right">
+          <item><item3 /></item>
+          <item><item4 /></item>
+        </section>
       </section>
-      <section class="top-mid">
-        <div class="timeselect-container">
-          <timeselect></timeselect>
-        </div>
-        <div class="map-container"><cnmap></cnmap></div>
-      </section>
-      <section class="top-right">
-        <item><item3 /></item>
-        <item><item4 /></item>
+
+      <section class="container-bottom">
+        <doubleline></doubleline>
       </section>
     </section>
-
-    <section class="container-bottom">
-      <doubleline></doubleline>
-    </section>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -34,7 +36,7 @@ import item4 from "@/components/item4.vue";
 import cnmap from "@/components/cnmap.vue";
 import doubleline from "@/components/doubleline.vue";
 import timeselect from "@/components/timeselect.vue";
-
+import navbar from "@/components/navbar.vue";
 export default {
   components: {
     item,
@@ -45,11 +47,21 @@ export default {
     cnmap,
     timeselect,
     doubleline,
+    navbar,
   },
 };
 </script>
 
 <style scoped>
+.p2body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("../assets/p2bg.svg");
+  background-size: 100% auto;
+}
 .container {
   margin: 0 auto;
   padding: 0.125rem;
@@ -62,13 +74,17 @@ export default {
 .top-right {
   flex: 2.5;
   margin: 0;
+  /*边框 */
 }
 
 .top-mid {
   flex: 4.2;
+  /*边框 */
+  /*边框 */
+  position: relative;
 }
 .top-mid {
-  position: relative;
+  
 }
 
 .timeselect-container {

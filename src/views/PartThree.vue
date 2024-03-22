@@ -1,4 +1,6 @@
 <template>
+  <div class="p3body">
+  <navbar />
   <div class="container">
     <div class="left-top">
       <div class="grid-container">
@@ -37,7 +39,11 @@
       </div>
     </div>
     <div class="right-top">
-      <el-cascader
+
+
+      <div id="text-display">{{ displayedText }}</div>
+    </div>
+    <div class="left-bottom">      <el-cascader
         class="inline-item2"
         size="small"
         :options="options"
@@ -46,22 +52,21 @@
       >
       </el-cascader>
 
-      <el-button class="inline-item" round @click="getData">点击查询</el-button>
-
-      <div id="text-display">{{ displayedText }}</div>
-    </div>
-    <div class="left-bottom"><cnmap /></div>
+      <el-button class="inline-item" round @click="getData">点击查询</el-button><cnmap /></div>
     <div class="right-bottom"><lunbo /></div>
   </div>
+</div>
 </template>
   
   <script>
 import cnmap from "@/components/cnmap.vue";
 import lunbo from "@/components/lunbo.vue";
+import navbar from "@/components/navbar.vue";
 export default {
   components: {
     cnmap,
     lunbo,
+    navbar,
   },
   data() {
     return {
@@ -79,15 +84,17 @@ export default {
 </script>
 
 <style scoped>
-body,
-html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+.p3body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("../assets/p3bg.svg");
+  background-size: cover;
 }
-
 .container {
-  height: 100%;
+  height: auto;
   display: flex;
   flex-wrap: wrap;
   margin: 10px;
@@ -95,19 +102,17 @@ html {
 .container > div {
   box-sizing: border-box;
   border: 2px solid white;
-  margin: 5px; /* 添加模块之间的间隔 */
-  flex-grow: 1; /* 填充剩余空间 */
 }
 .left-top {
   width: calc(50% - 20px);
-  height: 40%;
+  height: 30%;
   border: 2px solid white;
   box-sizing: border-box;
 }
 
 .right-top {
   width: calc(50% - 20px);
-  height: 40%;
+  height: 70%;
   border: 2px solid white;
   box-sizing: border-box;
 }
@@ -136,10 +141,11 @@ html {
 }
 
 .grid-item img {
-  width: 35vh;
+  width: 25vh;
   height: auto;
   cursor: pointer;
   margin: 10px;
+  
 }
 
 .grid-item .content {
@@ -162,20 +168,13 @@ html {
 
 #text-display {
   margin-top: 20px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: transparent;
   padding: 10px;
   font-size: 18px;
   font-weight: bold;
+  color:red;
 }
 
-@media only screen and (max-width: 600px) {
-  .left-top,
-  .right-top,
-  .left-bottom,
-  .right-bottom {
-    width: 100%;
-    height: 50%;
-  }
-}
+
 /* */
 </style>

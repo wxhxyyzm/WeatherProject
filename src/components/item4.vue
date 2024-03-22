@@ -10,6 +10,7 @@ import { inject, onMounted } from "vue";
 import jsonData from "../assets/beijing.json";
 import bus from "./eventBus.js";
 import echarts from "echarts";
+import {roma} from "../assets/roma.js";
 export default {
   name: "Bro5",
   data() {
@@ -33,7 +34,7 @@ export default {
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDoms"));
+      let myChart = $echarts.init(document.getElementById("chartDoms"),roma);
       // 绘制图表
       //let xdata = ["1", "2", "3", "4", "5", "6", "7"]; //改数据
       //let maxdata = [820, 932, 901, 934, 1290, 1330, 1320];

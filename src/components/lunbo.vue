@@ -23,16 +23,17 @@
 import item1 from "@/components/p3-item1.vue";
 import item2 from "@/components/p3-item2.vue";
 import item3 from "@/components/p3-item3.vue";
-
+import item4 from "@/components/p3-item4.vue";
 export default {
   components: {
     item1,
     item2,
     item3,
+    item4,
   },
   data() {
     return {
-      components: [item1, item2, item3], // 所有的组件列表
+      components: [item1, item2, item3,item4], // 所有的组件列表
       currentIndex: 0, // 当前选中组件的索引
     };
   },

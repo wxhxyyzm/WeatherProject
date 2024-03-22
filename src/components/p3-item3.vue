@@ -4,9 +4,10 @@
 <!-- 风力折线图 -->
 <script>
 import { inject, onMounted } from "vue";
-import jsonData from "../assets/beijing.json";
+import jsonData from "../assets/unclimate.json";
 import bus from "./eventBus.js";
 import echarts from "echarts";
+import {roma} from "../assets/roma.js";
 export default {
   name: "Bro4",
   data() {
@@ -32,22 +33,23 @@ export default {
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDomdx"));
+      let myChart = $echarts.init(document.getElementById("chartDomdx"),roma);
       // 绘制图表
       //let xdata = ["1", "2", "3", "4", "5", "6", "7"];
       //let ydata = [820, 932, 901, 934, 1290, 1330, 1320];
       //DEWP
-      const xdata = jsonData.map((item) => item.DATE); //日期
-      const ydata = jsonData.map((item) => item.MXSPD); //最大持续风速
-      const y2data = jsonData.map((item) => item.WDSP); //平均风速
-      const y3data = jsonData.map((item) => item.GUST); //最大阵风
+      const xdata = jsonData.map((item) => item.YearData); //日期
+      const ydata = jsonData.map((item) => item.High_Threshold); //高温
+      const y2data = jsonData.map((item) => item.Weak_Heatwave); //小
+      const y3data = jsonData.map((item) => item.Moderate_Heatwave); //中
+      const y4data = jsonData.map((item) => item.Moderate_Heatwave); //强
       myChart.setOption({
         //title属性
         textStyle: {
           color: "white", // 设置文字颜色为红色
         },
         title: {
-          text: "该地区风速相关信息折线图",
+          text: "该地区热浪",
           x: "center",
           textStyle: {
             color: "white", // 设置文字颜色为红色
@@ -77,18 +79,26 @@ export default {
           type: "category",
           data: xdata,
         },
-        yAxis: {
-          type: "value",
-        },
+        yAxis: [
+    {
+      type: 'value',
+      name: 'Line',
+    },
+    {
+      type: 'value',
+      name: 'Bar',
+    },
+  ],
         legend: {
-          data: ["平均风速", "最大持续风速"],
+          data: ["阈值", "小热浪","中热浪","大热浪"],
+          left:0
         },
         series: [
           {
-            data: y2data,
+            name:"阈值",
+            data: ydata,
             type: "line",
             smooth: true, //平滑过渡
-            areaStyle: {},
             markPoint: {
               data: [
                 {
@@ -109,11 +119,26 @@ export default {
                 },
               ],
             },
+            yAxisIndex: 0, 
           },
 
           {
-            data: ydata,
+            name:"小热浪",
+            data: y2data,
             type: "bar",
+            yAxisIndex: 1, 
+          },
+          {
+            name:"中热浪",
+            data: y3data,
+            type: "bar",
+            yAxisIndex: 1, 
+          },
+          {
+            name:"大热浪",
+            data: y4data,
+            type: "bar",
+            yAxisIndex: 1, 
           },
         ],
       });

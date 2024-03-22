@@ -10,7 +10,7 @@ import { inject, onMounted } from "vue";
 import bus from "./eventBus.js";
 import jsonData from "../assets/beijing.json";
 import echarts from "echarts";
-
+import {roma} from "../assets/roma.js";
 export default {
   name: "Bro6",
   data() {
@@ -36,7 +36,7 @@ export default {
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDomw"));
+      let myChart = $echarts.init(document.getElementById("chartDomw"),roma);
       // 绘制图表
       //let xdata = ["1", "2", "3", "4", "5", "6", "7"]; //改数据
       //let maxdata = [820, 932, 901, 934, 1290, 1330, 1320];
@@ -62,7 +62,7 @@ export default {
         },
         grid: {
           left: "2%",
-          right: "5%",
+          right: "2%",
           bottom: "10%",
         },
         xAxis: {
@@ -81,52 +81,20 @@ export default {
         },
         dataZoom: [
           {
-            startValue: "2023/1/1",
           },
           {
             type: "inside",
           },
         ],
-        visualMap: {
-          top: 50,
-          right: 10,
-          pieces: [
-            {
-              gt: 0,
-              lte: 20,
-              color: "#93CE07",
-            },
-            {
-              gt: 20,
-              lte: 40,
-              color: "#FBDB0F",
-            },
-            {
-              gt: 40,
-              lte: 60,
-              color: "#FC7D02",
-            },
-            {
-              gt: 60,
-              lte: 80,
-              color: "#FD0100",
-            },
-            {
-              gt: 80,
-              lte: 100,
-              color: "#AA069F",
-            },
-            {
-              gt: 100,
-              color: "#AC3B2A",
-            },
-          ],
-          outOfRange: {
-            color: "#999",
-          },
-        },
+       
+        legend: {
+    data: ['最高温', '最低温','平均温'],
+    left:0
+
+  },
         series: [
           {
+            name:"最高温",
             data: ydata, // 底部线条数据
             type: "line",
             smooth: true, // 平滑过渡
@@ -135,7 +103,17 @@ export default {
             },
           },
           {
+            name:"最低温",
             data: y2data, // 上部线条数据
+            type: "line",
+            smooth: true, // 平滑过渡
+            markPoint: {
+              data: [],
+            },
+          },          
+          {
+            name:"平均温",
+            data: y3data, // 上部线条数据
             type: "line",
             smooth: true, // 平滑过渡
             markPoint: {
