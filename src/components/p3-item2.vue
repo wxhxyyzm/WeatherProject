@@ -1,22 +1,23 @@
 <template>
-    <!-- 降水信息 -->
-    <div id="chartDomy" class="chart"></div>
-
+  <!-- 降水信息 -->
+  <div id="chartDomy" class="chart"></div>
 </template>
     <!-- 折线图 -->
-    <script>
+<script>
 import { inject, onMounted } from "vue";
 import jsonData from "../assets/unclimate.json";
-import bus from "./eventBus.js";
+import bus from "../views/eventBus.js";
 import echarts from "echarts";
-import {roma} from "../assets/roma.js";
+import { roma } from "../assets/roma.js";
 export default {
-  name: "Bro3",
+  // name: 'Bro3',
   data() {
     return {
       rainvalue: {
-        TREASURE_DATE: [],
-        PRCP: [],
+        YearData: [],
+        Heavy_Rainfall: [],
+        Severe_Rainfall: [],
+        Extreme_Rainfall: [],
       },
     };
   },
@@ -29,31 +30,31 @@ export default {
   },
   setup() {
     // 得到echarts对象
-    let $echarts = inject("echarts");
+    const $echarts = inject("echarts");
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDomy"),roma);
+      const myChart = $echarts.init(document.getElementById("chartDomy"), roma);
       // 绘制图表
-      //let xdata = ["1", "2", "3", "4", "5", "6", "7"]; //改数据
-      //let maxdata = [820, 932, 901, 934, 1290, 1330, 1320];
-      //let mindata = [120, 132, 101, 134, 90, 230, 210];
-      //let avgdata = [320, 332, 301, 334, 390, 330, 320];
+      // let xdata = ["1", "2", "3", "4", "5", "6", "7"]; //改数据
+      // let maxdata = [820, 932, 901, 934, 1290, 1330, 1320];
+      // let mindata = [120, 132, 101, 134, 90, 230, 210];
+      // let avgdata = [320, 332, 301, 334, 390, 330, 320];
       const xdata = jsonData.map((item) => item.YearData);
-      const ydata = jsonData.map((item) => item.Heavy_Rainfall);//降雨数据
-      const y2data = jsonData.map((item) => item.Severe_Rainfall);//雪深数据
-      const y3data = jsonData.map((item) => item.Extreme_Rainfall);//雪深数据
+      const ydata = jsonData.map((item) => item.Heavy_Rainfall);
+      const y2data = jsonData.map((item) => item.Severe_Rainfall);
+      const y3data = jsonData.map((item) => item.Extreme_Rainfall);
       myChart.setOption({
         title: {
-    text: '该地区暴雨',
-    left: 'center',
-  },
-  left: 'center',
-  grid: {
+          text: "该地区暴雨",
+          left: "center",
+        },
+        left: "center",
+        grid: {
           left: "10%",
           bottom: "15%",
         },
-  toolbox: {
+        toolbox: {
           feature: {
             restore: {},
             saveAsImage: {
@@ -62,158 +63,261 @@ export default {
           },
         },
         dataZoom: [
-    {
-      show: false,
-    },
-    {
-      type: 'inside',
-    }
-  ],
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'cross',
-      animation: false,
-      label: {
-        backgroundColor: '#505765'
-      }
-    }
-  },
-  angleAxis: {
-    type: 'category',
-    data: xdata
-  },
-  radiusAxis: {},
-  polar: {},
-  series: [
-    {
-      type: 'bar',
-      data: ydata,
-      coordinateSystem: 'polar',
-      name: '暴雨',
-      stack: 'a',
-      emphasis: {
-        focus: 'series'
-      }
-    },
-    {
-      type: 'bar',
-      data:y2data,
-      coordinateSystem: 'polar',
-      name: '强暴雨',
-      stack: 'a',
-      emphasis: {
-        focus: 'series'
-      }
-    },
-    {
-      type: 'bar',
-      data: y3data,
-      coordinateSystem: 'polar',
-      name: '大暴雨',
-      stack: 'a',
-      emphasis: {
-        focus: 'series'
-      }
-    }
-  ],
-  legend: {
-    show: true,
-    data: ['暴雨', '强暴雨', '大暴雨'],
-    left:0
-  }
+          {
+            show: false,
+          },
+          {
+            type: "inside",
+          },
+        ],
+
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+            animation: false,
+            label: {
+              backgroundColor: "#505765",
+            },
+          },
+        },
+        angleAxis: {
+          type: "category",
+          data: xdata,
+        },
+        radiusAxis: {},
+        polar: {},
+        series: [
+          {
+            type: "bar",
+            data: ydata,
+            coordinateSystem: "polar",
+            name: "暴雨",
+            stack: "a",
+            emphasis: {
+              focus: "series",
+            },
+            itemStyle: {
+              barBorderRadius: [2, 2, 0, 0], //柱体圆角
+              color: new $echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  //代表渐变色从正上方开始
+                  offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                  color: "#57B2F4",
+                }, //柱图渐变色
+                {
+                  offset: 1, //指100%处的颜色
+                  color: "#67E0FF",
+                },
+              ]),
+            },
+          },
+          {
+            type: "bar",
+            data: y2data,
+            coordinateSystem: "polar",
+            name: "大暴雨",
+            stack: "a",
+            emphasis: {
+              focus: "series",
+            },
+            itemStyle: {
+              barBorderRadius: [2, 2, 0, 0], //柱体圆角
+              color: new $echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  //代表渐变色从正上方开始
+                  offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                  color: "#659400",
+                }, //柱图渐变色
+                {
+                  offset: 1, //指100%处的颜色
+                  color: "#AEFF02",
+                },
+              ]),
+            },
+          },
+          {
+            type: "bar",
+            data: y3data,
+            coordinateSystem: "polar",
+            name: "大暴雨",
+            stack: "a",
+            emphasis: {
+              focus: "series",
+            },
+            itemStyle: {
+              barBorderRadius: [2, 2, 0, 0], //柱体圆角
+              color: new $echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  //代表渐变色从正上方开始
+                  offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                  color: "#F7B70B",
+                }, //柱图渐变色
+                {
+                  offset: 1, //指100%处的颜色
+                  color: "#FFF26D",
+                },
+              ]),
+            },
+          },
+        ],
+        legend: {
+          show: true,
+          data: ["暴雨", "大暴雨", "大暴雨"],
+          left: 0,
+        },
       });
     });
   },
   watch: {
     rainvalue: function (newvalue, oldvalue) {
       if (oldvalue !== newvalue) {
-        var echarts = require("echarts");
-        var yChart = echarts.init(document.getElementById("chartDomy"));
-        const xdata = this.rainvalue["TREASURE_DATE"];
-        const ydata = this.rainvalue["PRCP"];
-        yChart.setOption({
+        const echarts = require("echarts");
+        const myChart = echarts.init(
+          document.getElementById("chartDomy"),
+          roma
+        );
+        const xdata = this.rainvalue.YearData;
+        const ydata = this.rainvalue.Heavy_Rainfall;
+        const y2data = this.rainvalue.Severe_Rainfall;
+        const y3data = this.rainvalue.Extreme_Rainfall;
+
+        myChart.setOption({
           title: {
-            text: "降水",
-            x: "center",
+            text: "该地区暴雨",
+            left: "center",
           },
+          left: "center",
           grid: {
             left: "10%",
-            bottom: "10%",
+            bottom: "15%",
           },
           toolbox: {
             feature: {
+              restore: {},
               saveAsImage: {
                 pixelRatio: 2,
               },
             },
           },
+          dataZoom: [
+            {
+              show: false,
+            },
+            {
+              type: "inside",
+            },
+          ],
+
           tooltip: {
             trigger: "axis",
             axisPointer: {
-              type: "shadow",
+              type: "cross",
+              animation: false,
+              label: {
+                backgroundColor: "#505765",
+              },
             },
           },
-
-          xAxis: {
+          angleAxis: {
+            type: "category",
             data: xdata,
-            silent: false,
-            splitLine: {
-              show: false,
-            },
-            splitArea: {
-              show: false,
-            },
           },
-          yAxis: {
-            splitArea: {
-              show: false,
-            },
-          },
+          radiusAxis: {},
+          polar: {},
           series: [
             {
-              type: "line",
+              type: "bar",
               data: ydata,
-              // Set `large` for large data amount
-              large: true,
-              sort: "ascending",
-              markPoint: {
-                data: [
+              coordinateSystem: "polar",
+              name: "暴雨",
+              stack: "a",
+              emphasis: {
+                focus: "series",
+              },
+              itemStyle: {
+                barBorderRadius: [2, 2, 0, 0], //柱体圆角
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
-                    type: "max",
-                    name: "最大值",
-                    label: {
-                      show: true,
-                      formatter: "{b}: {c}",
-                    },
-                  },
+                    //代表渐变色从正上方开始
+                    offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                    color: "#57B2F4",
+                  }, //柱图渐变色
                   {
-                    type: "min",
-                    name: "最小值",
-                    label: {
-                      show: true,
-                      formatter: "{b}: {c}",
-                    },
+                    offset: 1, //指100%处的颜色
+                    color: "#67E0FF",
                   },
-                ],
+                ]),
+              },
+            },
+            {
+              type: "bar",
+              data: y2data,
+              coordinateSystem: "polar",
+              name: "大暴雨",
+              stack: "a",
+              emphasis: {
+                focus: "series",
+              },
+              itemStyle: {
+                barBorderRadius: [2, 2, 0, 0], //柱体圆角
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    //代表渐变色从正上方开始
+                    offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                    color: "#659400",
+                  }, //柱图渐变色
+                  {
+                    offset: 1, //指100%处的颜色
+                    color: "#AEFF02",
+                  },
+                ]),
+              },
+            },
+            {
+              type: "bar",
+              data: y3data,
+              coordinateSystem: "polar",
+              name: "大暴雨",
+              stack: "a",
+              emphasis: {
+                focus: "series",
+              },
+              itemStyle: {
+                barBorderRadius: [2, 2, 0, 0], //柱体圆角
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    //代表渐变色从正上方开始
+                    offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                    color: "#F7B70B",
+                  }, //柱图渐变色
+                  {
+                    offset: 1, //指100%处的颜色
+                    color: "#FFF26D",
+                  },
+                ]),
               },
             },
           ],
+          legend: {
+            show: true,
+            data: ["暴雨", "大暴雨", "大暴雨"],
+            left: 0,
+          },
         });
       }
     },
   },
 };
 </script>
-  
+
     <style scope>
 #chartDomy {
   /* 高度360 */
   /* height: 3.9rem; */
   /*margin-top: 0.2rem;*/
-  height: 6rem;
+  height: 7.5rem;
   padding: 0px;
   background-color: transparent;
 }
 </style>
-  

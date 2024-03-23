@@ -5,7 +5,7 @@
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
 <style scope>
@@ -32,7 +32,5 @@ export default {};
     box-shadow: inset 0 0 0 0 transparent;
   }
 }
-
-
 
 </style>

@@ -5,21 +5,21 @@
   </div>
 </template>
   <!-- 折线图 -->
-  <script>
+<script>
 import { inject, onMounted } from "vue";
-import bus from "./eventBus.js";
+import bus from "../views/eventBus.js";
 import jsonData from "../assets/beijing.json";
 import echarts from "echarts";
-import {roma} from "../assets/roma.js";
+import { roma } from "../assets/roma.js";
 export default {
-  name: "Bro6",
+  // name: 'Bro6',
   data() {
     return {
       tempvalue: {
         TREASURE_DATE: [],
-        MAX_TEMPERATURE: [], //最高温
-        MIN_TEMPERATURE: [], //最低温
-        TEMP: [], //平均气温
+        MAX_TEMPERATURE: [], // 最高温
+        MIN_TEMPERATURE: [], // 最低温
+        TEMP: [], // 平均气温
       },
     };
   },
@@ -32,23 +32,19 @@ export default {
   },
   setup() {
     // 得到echarts对象
-    let $echarts = inject("echarts");
+    const $echarts = inject("echarts");
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDomw"),roma);
+      const myChart = $echarts.init(document.getElementById("chartDomw"), roma);
       // 绘制图表
-      //let xdata = ["1", "2", "3", "4", "5", "6", "7"]; //改数据
-      //let maxdata = [820, 932, 901, 934, 1290, 1330, 1320];
-      //let mindata = [120, 132, 101, 134, 90, 230, 210];
-      //let avgdata = [320, 332, 301, 334, 390, 330, 320];
       const xdata = jsonData.map((item) => item.DATE);
       const ydata = jsonData.map((item) => item.MAX);
       const y2data = jsonData.map((item) => item.MIN);
       const y3data = jsonData.map((item) => item.TEMP);
 
       myChart.setOption({
-        //title属性
+        // title属性
         textStyle: {
           color: "white", // 设置文字颜色为红色
         },
@@ -60,6 +56,16 @@ export default {
           },
           padding: [20, 0, 0, 0],
         },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "cross",
+            animation: false,
+            label: {
+              backgroundColor: "#505765",
+            },
+          },
+        },
         grid: {
           left: "2%",
           right: "2%",
@@ -70,7 +76,11 @@ export default {
           data: xdata,
         },
         yAxis: {
+          name: "温度(°C)",
           type: "value",
+          nameTextStyle: {
+            color: "white", // 将名称文字颜色设置为白色
+          },
         },
         toolbox: {
           right: 10,
@@ -80,45 +90,54 @@ export default {
           },
         },
         dataZoom: [
-          {
-          },
+          {},
           {
             type: "inside",
           },
         ],
-       
-        legend: {
-    data: ['最高温', '最低温','平均温'],
-    left:0
 
-  },
+        legend: {
+          data: ["最高温", "最低温", "平均温"],
+          left: 50,
+          top: 10,
+        },
         series: [
           {
-            name:"最高温",
-            data: ydata, // 底部线条数据
-            type: "line",
-            smooth: true, // 平滑过渡
-            markPoint: {
-              data: [],
-            },
-          },
-          {
-            name:"最低温",
-            data: y2data, // 上部线条数据
-            type: "line",
-            smooth: true, // 平滑过渡
-            markPoint: {
-              data: [],
-            },
-          },          
-          {
-            name:"平均温",
+            name: "平均温",
             data: y3data, // 上部线条数据
             type: "line",
-            smooth: true, // 平滑过渡
             markPoint: {
               data: [],
             },
+            lineStyle: {
+              color: "#57B2F4", // 设置线条颜色为红色
+            },
+            symbol: "none",
+          },
+
+          {
+            name: "最低温",
+            data: y2data, // 上部线条数据
+            type: "line",
+            markPoint: {
+              data: [],
+            },
+            lineStyle: {
+              color: "#AEFF02", // 设置线条颜色为红色
+            },
+            symbol: "none",
+          },
+          {
+            name: "最高温",
+            data: ydata, // 底部线条数据
+            type: "line",
+            markPoint: {
+              data: [],
+            },
+            lineStyle: {
+              color: "#FFACF7", // 设置线条颜色为红色
+            },
+            symbol: "none",
           },
         ],
       });
@@ -127,14 +146,17 @@ export default {
   watch: {
     tempvalue: function (newvalue, oldvalue) {
       if (oldvalue !== newvalue) {
-        var echarts = require("echarts");
-        var yChart = echarts.init(document.getElementById("chartDomw"));
-        const xdata = this.tempvalue["TREASURE_DATE"];
-        const ydata = this.tempvalue["MAX_TEMPERATURE"];
-        const y2data = this.tempvalue["MIN_TEMPERATURE"];
-        const y3data = this.tempvalue["TEMP"];
-        yChart.setOption({
-          //title属性
+        const echarts = require("echarts");
+        const myChart = echarts.init(
+          document.getElementById("chartDomw"),
+          roma
+        );
+        const xdata = this.tempvalue.TREASURE_DATE;
+        const ydata = this.tempvalue.MAX_TEMPERATURE;
+        const y2data = this.tempvalue.MIN_TEMPERATURE;
+        const y3data = this.tempvalue.TEMP;
+        myChart.setOption({
+          // title属性
           textStyle: {
             color: "white", // 设置文字颜色为红色
           },
@@ -144,13 +166,23 @@ export default {
             textStyle: {
               color: "white", // 设置文字颜色为红色
             },
+            padding: [20, 0, 0, 0],
+          },
+          grid: {
+            left: "2%",
+            right: "2%",
+            bottom: "10%",
           },
           xAxis: {
             type: "category",
             data: xdata,
           },
           yAxis: {
+            name: "温度(°C)",
             type: "value",
+            nameTextStyle: {
+              color: "white", // 将名称文字颜色设置为白色
+            },
           },
           toolbox: {
             right: 10,
@@ -159,74 +191,65 @@ export default {
               saveAsImage: {},
             },
           },
-          dataZoom: [
-            {
-              startValue: "2023/1/1",
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "cross",
+              animation: false,
+              label: {
+                backgroundColor: "#505765",
+              },
             },
+          },
+          dataZoom: [
+            {},
             {
               type: "inside",
             },
           ],
-          visualMap: {
-            top: 50,
-            right: 10,
-            pieces: [
-              {
-                gt: 0,
-                lte: 20,
-                color: "#93CE07",
-              },
-              {
-                gt: 20,
-                lte: 40,
-                color: "#FBDB0F",
-              },
-              {
-                gt: 40,
-                lte: 60,
-                color: "#FC7D02",
-              },
-              {
-                gt: 60,
-                lte: 80,
-                color: "#FD0100",
-              },
-              {
-                gt: 80,
-                lte: 100,
-                color: "#AA069F",
-              },
-              {
-                gt: 100,
-                color: "#AC3B2A",
-              },
-            ],
-            outOfRange: {
-              color: "#999",
-            },
-            textstyle: {
-              normal: {
-                color: "white", // 设置 VisualMap 组件最右侧标签文本颜色为白色
-              },
-            },
-          },
 
+          legend: {
+            data: ["最高温", "最低温", "平均温"],
+            left: 50,
+            top: 10,
+          },
           series: [
             {
-              data: ydata, // 底部线条数据
+              name: "平均温",
+              data: y3data, // 上部线条数据
               type: "line",
-              smooth: true, // 平滑过渡
               markPoint: {
                 data: [],
               },
+              lineStyle: {
+                color: "#57B2F4", // 设置线条颜色为红色
+              },
+              symbol: "none",
             },
+
             {
+              name: "最低温",
               data: y2data, // 上部线条数据
               type: "line",
-              smooth: true, // 平滑过渡
               markPoint: {
                 data: [],
               },
+              lineStyle: {
+                color: "#AEFF02", // 设置线条颜色为红色
+              },
+              symbol: "none",
+            },
+            {
+              name: "最高温",
+              data: ydata, // 底部线条数据
+              type: "line",
+              markPoint: {
+                data: [],
+              },
+              lineStyle: {
+                color: "#FFACF7", // 设置线条颜色为红色
+              },
+              symbol: "none",
             },
           ],
         });
@@ -243,6 +266,22 @@ export default {
   height: 28vh;
   padding: 0px;
   text-align: center;
-  background-color: rgba(240, 231, 231, 0.1);
+  border-radius: 0.2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 0 transparent;
+  animation: flowLine 3s infinite linear;
+}
+
+@keyframes flowLine {
+  0% {
+    box-shadow: inset 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: inset 0 0 0 2px rgb(100, 250, 237);
+  }
+  100% {
+    box-shadow: inset 0 0 0 0 transparent;
+  }
 }
 </style>

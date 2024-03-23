@@ -3,8 +3,8 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
   devServer: {
-    hot: false,
+    hot: false
     // 其他配置项...
-  },
+  }
 
 })

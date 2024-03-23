@@ -6,7 +6,6 @@
       @click="previousComponent"
       class="button-left"
     />
-
     <!-- 显示当前选中的组件 -->
     <component :is="getSelectedComponent()" class="content" />
 
@@ -33,7 +32,7 @@ export default {
   },
   data() {
     return {
-      components: [item1, item2, item3,item4], // 所有的组件列表
+      components: [item1, item2, item3, item4], // 所有的组件列表
       currentIndex: 0, // 当前选中组件的索引
     };
   },
@@ -68,7 +67,8 @@ export default {
   padding: 10px;
   border: none;
   cursor: pointer;
-  height: 5rem; /* 调整按钮的高度 */
+  height: 4rem; /* 调整按钮的高度 */
+  margin-top: 100px;
 }
 
 .content {

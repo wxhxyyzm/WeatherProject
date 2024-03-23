@@ -5,46 +5,48 @@
 <script>
 import { inject, onMounted } from "vue";
 import jsonData from "../assets/unclimate.json";
-import bus from "./eventBus.js";
+import bus from "../views/eventBus.js";
 import echarts from "echarts";
-import {roma} from "../assets/roma.js";
+import { roma } from "../assets/roma.js";
 export default {
   name: "Bro4",
   data() {
     return {
-      windvalue: {
-        TREASURE_DATE: [],
-        "": [], //平均风速
-        MXSPD: [], //最大持续风速
-        GUST: [], //最大阵风
+      heatvalue: {
+        YearData: [],
+        High_Threshold: [],
+        Weak_Heatwave: [],
+        Moderate_Heatwave: [],
+        Strong_Heatwave: [],
       },
     };
   },
   created() {
     // bus.on 方法注册一个自定义事件，通过事件的处理函数形参接收数据
-    bus.on("broSendMsgWind", (val) => {
-      this.windvalue = val;
-      console.log(this.windvalue);
+    bus.on("broSendMsgHeat", (val) => {
+      this.heatvalue = val;
+      console.log(this.heatvalue);
     });
   },
   setup() {
     // 得到echarts对象
-    let $echarts = inject("echarts");
+    const $echarts = inject("echarts");
     // 需要获取到element,所以是onMounted 别忘了上面引用
     onMounted(() => {
       // 初始化echarts 别忘了给上面echarts容器添加id
-      let myChart = $echarts.init(document.getElementById("chartDomdx"),roma);
+      const myChart = $echarts.init(
+        document.getElementById("chartDomdx"),
+        roma
+      );
       // 绘制图表
-      //let xdata = ["1", "2", "3", "4", "5", "6", "7"];
-      //let ydata = [820, 932, 901, 934, 1290, 1330, 1320];
-      //DEWP
-      const xdata = jsonData.map((item) => item.YearData); //日期
-      const ydata = jsonData.map((item) => item.High_Threshold); //高温
-      const y2data = jsonData.map((item) => item.Weak_Heatwave); //小
-      const y3data = jsonData.map((item) => item.Moderate_Heatwave); //中
-      const y4data = jsonData.map((item) => item.Moderate_Heatwave); //强
+      // DEWP
+      const xdata = jsonData.map((item) => item.YearData); // 日期
+      const ydata = jsonData.map((item) => item.High_Threshold); // 高温
+      const y2data = jsonData.map((item) => item.Weak_Heatwave); // 小
+      const y3data = jsonData.map((item) => item.Moderate_Heatwave); // 中
+      const y4data = jsonData.map((item) => item.Strong_Heatwave); // 强
       myChart.setOption({
-        //title属性
+        // title属性
         textStyle: {
           color: "white", // 设置文字颜色为红色
         },
@@ -80,25 +82,32 @@ export default {
           data: xdata,
         },
         yAxis: [
-    {
-      type: 'value',
-      name: 'Line',
-    },
-    {
-      type: 'value',
-      name: 'Bar',
-    },
-  ],
+          {
+            type: "value",
+            name: "次数",
+          },
+          {
+            type: "value",
+          },
+        ],
         legend: {
-          data: ["阈值", "小热浪","中热浪","大热浪"],
-          left:0
+          data: ["阈值", "弱高温热浪", "中强高温热浪", "强高温热浪"],
+          top: 30,
+          left: "center",
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            // Use axis to trigger tooltip
+            type: "shadow", // 'shadow' as default; can also be 'line' or 'shadow'
+          },
         },
         series: [
           {
-            name:"阈值",
+            name: "阈值",
             data: ydata,
             type: "line",
-            smooth: true, //平滑过渡
+            smooth: true, // 平滑过渡
             markPoint: {
               data: [
                 {
@@ -119,73 +128,150 @@ export default {
                 },
               ],
             },
-            yAxisIndex: 0, 
+            yAxisIndex: 0,
           },
 
           {
-            name:"小热浪",
+            name: "弱高温热浪",
             data: y2data,
             type: "bar",
-            yAxisIndex: 1, 
+            yAxisIndex: 1,
+            itemStyle: {
+              barBorderRadius: [2, 2, 0, 0], //柱体圆角
+              color: new $echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                {
+                  //代表渐变色从正上方开始
+                  offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                  color: "#996794",
+                }, //柱图渐变色
+                {
+                  offset: 1, //指100%处的颜色
+                  color: "#FFACF7",
+                },
+              ]),
+            },
           },
           {
-            name:"中热浪",
+            name: "中强高温热浪",
             data: y3data,
             type: "bar",
-            yAxisIndex: 1, 
+            yAxisIndex: 1,
+            itemStyle: {
+              barBorderRadius: [2, 2, 0, 0], //柱体圆角
+              color: new $echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                {
+                  //代表渐变色从正上方开始
+                  offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                  color: "#659400",
+                }, //柱图渐变色
+                {
+                  offset: 1, //指100%处的颜色
+                  color: "#AEFF02",
+                },
+              ]),
+            },
           },
           {
-            name:"大热浪",
+            name: "强高温热浪",
             data: y4data,
             type: "bar",
-            yAxisIndex: 1, 
+            yAxisIndex: 1,
+            itemStyle: {
+              barBorderRadius: [2, 2, 0, 0], //柱体圆角
+              color: new $echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                {
+                  //代表渐变色从正上方开始
+                  offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                  color: "#F7B70B",
+                }, //柱图渐变色
+                {
+                  offset: 1, //指100%处的颜色
+                  color: "#FFF26D",
+                },
+              ]),
+            },
           },
         ],
       });
     });
   },
   watch: {
-    windvalue: function (newvalue, oldvalue) {
+    heatvalue: function (newvalue, oldvalue) {
       if (oldvalue !== newvalue) {
-        var echarts = require("echarts");
-        var yChart = echarts.init(document.getElementById("chartDomdx"));
-        const xdata = this.windvalue["TREASURE_DATE"];
-        const ydata = this.windvalue["MXSPD"];
-        const y2data = this.windvalue["WDSP"];
-        const y3data = this.windvalue["GUST"];
+        const echarts = require("echarts");
+        const yChart = echarts.init(
+          document.getElementById("chartDomdx"),
+          roma
+        );
+        const xdata = this.heatvalue.YearData;
+        const ydata = this.heatvalue.High_Threshold;
+        const y2data = this.heatvalue.Weak_Heatwave;
+        const y3data = this.heatvalue.Moderate_Heatwave;
+        const y4data = this.heatvalue.Strong_Heatwave;
+
         yChart.setOption({
-          //title属性
+          // title属性
+          textStyle: {
+            color: "white", // 设置文字颜色为红色
+          },
           title: {
-            text: "该地区风速相关信息折线图",
+            text: "该地区热浪",
             x: "center",
+            textStyle: {
+              color: "white", // 设置文字颜色为红色
+            },
           },
           grid: {
             left: "10%",
-            bottom: "10%",
+            bottom: "15%",
           },
           toolbox: {
             feature: {
+              restore: {},
               saveAsImage: {
                 pixelRatio: 2,
               },
             },
           },
+          dataZoom: [
+            {
+              show: false,
+            },
+            {
+              type: "inside",
+            },
+          ],
           xAxis: {
             type: "category",
             data: xdata,
           },
-          yAxis: {
-            type: "value",
-          },
+          yAxis: [
+            {
+              type: "value",
+              name: "次数",
+            },
+            {
+              type: "value",
+            },
+          ],
           legend: {
-            data: ["平均风速", "最大持续风速"],
+            data: ["阈值", "弱高温热浪", "中强高温热浪", "强高温热浪"],
+            top: 30,
+            left: "center",
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              // Use axis to trigger tooltip
+              type: "shadow", // 'shadow' as default; can also be 'line' or 'shadow'
+            },
           },
           series: [
             {
-              data: y2data,
+              name: "阈值",
+              data: ydata,
               type: "line",
-              smooth: true, //平滑过渡
-              areaStyle: {},
+              smooth: true, // 平滑过渡
               markPoint: {
                 data: [
                   {
@@ -206,10 +292,68 @@ export default {
                   },
                 ],
               },
+              yAxisIndex: 0,
+            },
+
+            {
+              name: "弱高温热浪",
+              data: y2data,
+              type: "bar",
+              yAxisIndex: 1,
+              itemStyle: {
+                barBorderRadius: [2, 2, 0, 0], //柱体圆角
+                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                  {
+                    //代表渐变色从正上方开始
+                    offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                    color: "#996794",
+                  }, //柱图渐变色
+                  {
+                    offset: 1, //指100%处的颜色
+                    color: "#FFACF7",
+                  },
+                ]),
+              },
             },
             {
-              data: ydata,
+              name: "中强高温热浪",
+              data: y3data,
               type: "bar",
+              yAxisIndex: 1,
+              itemStyle: {
+                barBorderRadius: [2, 2, 0, 0], //柱体圆角
+                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                  {
+                    //代表渐变色从正上方开始
+                    offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                    color: "#659400",
+                  }, //柱图渐变色
+                  {
+                    offset: 1, //指100%处的颜色
+                    color: "#AEFF02",
+                  },
+                ]),
+              },
+            },
+            {
+              name: "强高温热浪",
+              data: y4data,
+              type: "bar",
+              yAxisIndex: 1,
+              itemStyle: {
+                barBorderRadius: [2, 2, 0, 0], //柱体圆角
+                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                  {
+                    //代表渐变色从正上方开始
+                    offset: 0, //offset范围是0~1，用于表示位置，0是指0%处的颜色
+                    color: "#F7B70B",
+                  }, //柱图渐变色
+                  {
+                    offset: 1, //指100%处的颜色
+                    color: "#FFF26D",
+                  },
+                ]),
+              },
             },
           ],
         });
@@ -223,7 +367,7 @@ export default {
 #chartDomdx {
   /* 高度360 */
   /*margin-top: 0.2rem;*/
-  height: 6rem;
+  height: 7.5rem;
   padding: 0px;
   background-color: transparent;
   text-align: center;

@@ -46,7 +46,7 @@ export default {
     options: {
       type: Object,
       // 对象或数组且一定会从一个工厂函数返回默认值
-      default: function() {
+      default: function () {
         return {}
       }
     }
@@ -62,7 +62,7 @@ export default {
     sliderCoverflow,
     sliderFade
   ],
-  data() {
+  data () {
     return {
       data: {},
       config: {
@@ -80,7 +80,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.config.pageWidth = this.$el.offsetWidth
     this.config.pageHeight = this.$el.offsetHeight
     // 设定垂直轮播class
@@ -93,15 +93,15 @@ export default {
     window.removeEventListener('resize', this.resize)
   },
   methods: {
-    visibilitychange() {
-      let that = this
+    visibilitychange () {
+      const that = this
       if (document.hidden) {
         that.options.autoplay && that.clock().stop(that)
       } else {
         that.options.autoplay && that.clock().begin(that)
       }
     },
-    resize() {
+    resize () {
       this.s_data.pageWidth = this.$el.offsetWidth
       this.s_data.pageHeight = this.$el.offsetHeight
       // 修复循环切换bug
@@ -111,22 +111,22 @@ export default {
       }
       this.slide(this.data.currentPage, 'animationnone')
     },
-    swipeStart(e) {
+    swipeStart (e) {
       sliderMove.methods.swipeStart.call(this, e)
     },
-    swipeMove(e) {
+    swipeMove (e) {
       const res = sliderMove.methods.swipeMove.call(this, e)
       if ((this.config.effect === 'slide' || this.config.effect === 'nest') && res) {
         sliderBasic.methods.swipeMove.call(this, e)
       }
     },
-    swipeEnd(e) {
+    swipeEnd (e) {
       sliderMove.methods.swipeEnd.call(this, e)
     },
-    swipeOut(e) {
+    swipeOut (e) {
       sliderMove.methods.swipeOut.call(this, e)
     },
-    pre() {
+    pre () {
       // debugger
       this.data.direction = 'left'
       if (this.config.effect === 'slide' || this.config.effect === 'nest') {
@@ -139,7 +139,7 @@ export default {
         sliderFade.methods.pre.call(this)
       }
     },
-    next() {
+    next () {
       this.data.direction = 'right'
       if (this.config.effect === 'slide' || this.config.effect === 'nest') {
         sliderBasic.methods.next.call(this)
@@ -151,7 +151,7 @@ export default {
         sliderFade.methods.next.call(this)
       }
     },
-    slide(pagenum, type) {
+    slide (pagenum, type) {
       // 执行动画
       this.config.animation = true
       // 无样式滚动
@@ -171,7 +171,7 @@ export default {
       sliderAddClass.call(this, pagenum, type)
     },
     // 阻止页面滚动
-    preventDefault(e) {
+    preventDefault (e) {
       e.preventDefault()
     }
   },
@@ -179,9 +179,9 @@ export default {
     sliderWrapper,
     renderpagination: {
       // eslint-disable-line
-      render: function(createElement) {
-        let index = this.index
-        let render = this.options.renderPagination
+      render: function (createElement) {
+        const index = this.index
+        const render = this.options.renderPagination
         return render.call(this, createElement, index)
       },
       name: 'renderpagination',

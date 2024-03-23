@@ -9,7 +9,7 @@ import elementPlus from "element-plus";
 
 export default {
   setup() {
-    //provide("mingzi","chuandi")
+    // provide("mingzi","chuandi")
     provide("echarts", echarts);
     provide("axios", axios);
     provide("elementPlus", elementPlus);

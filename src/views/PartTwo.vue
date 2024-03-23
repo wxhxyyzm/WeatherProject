@@ -84,16 +84,15 @@ export default {
   position: relative;
 }
 .top-mid {
-  
 }
 
 .timeselect-container {
   position: absolute;
   top: 0;
   left: 25px;
-  transform: translate(-10px, 20px);
+  transform: translate(150px, 20px);
   margin-top: -10px; /* 调整上方间距 */
-  margin-right: -0px; /* 调整右侧间距 */
+  margin-right: -100px; /* 调整右侧间距 */
 }
 .map-container {
   margin-top: 50px;
