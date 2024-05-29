@@ -6,7 +6,6 @@ import { provide } from "vue";
 import * as echarts from "echarts";
 import axios from "axios";
 import elementPlus from "element-plus";
-
 export default {
   setup() {
     // provide("mingzi","chuandi")
@@ -18,8 +17,6 @@ export default {
 };
 </script>
 <style>
-body {
-}
 * {
   margin: 0px;
   padding: 0px;

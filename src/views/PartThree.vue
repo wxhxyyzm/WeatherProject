@@ -13,7 +13,7 @@
             <div class="overlay-text">01</div>
             <div class="bottom-right-text">热浪</div>
           </div>
-          <div class="grid-item">
+          <div class="grid-item2">
             <img
               src="../assets/hanchao.jpg"
               alt="Image 2"
@@ -31,7 +31,7 @@
             <div class="overlay-text">03</div>
             <div class="bottom-right-text">暴雨</div>
           </div>
-          <div class="grid-item">
+          <div class="grid-item2">
             <img
               src="../assets/jufeng.jpg"
               alt="Image 4"
@@ -59,7 +59,7 @@
 
           <el-button class="inline-item" round @click="getData"
             >点击查询</el-button
-          ><cnmap />
+          ><cnmap2 />
         </div>
       </div>
       <div class="right-bottom"><lunbo /></div>
@@ -69,14 +69,14 @@
 
 <script>
 import { provinceAndCityData, CodeToText } from "element-china-area-data";
-import cnmap from "@/components/cnmap.vue";
+import cnmap2 from "@/components/cnmap2.vue";
 import lunbo from "@/components/lunbo.vue";
 import navbar from "@/components/navbar.vue";
 import axios from "axios";
 import bus from "./eventBus.js";
 export default {
   components: {
-    cnmap,
+    cnmap2,
     lunbo,
     navbar,
   },
@@ -163,9 +163,14 @@ export default {
             Grade_11_Wind: msg.Grade_11_Wind,
             Grade_12_Wind: msg.Grade_12_Wind,
           };
-          console.log("haha", figure4);
           bus.emit("broSendMsgWind2", figure4);
 
+          // 给地图制作数据
+          const figure5 = {
+            LATITUDE: msg.LATITUDE,
+            LONGITUDE: msg.LONGITUDE,
+          };
+          bus.emit("broSendMsgLocation", figure5);
           // console.log(msg) // 因为不能直接使用this作为指针，因此在这之前将this赋给了then指针
           // window.alter('Success' + this.serverResponse.status + ',' + this.serverResponse.data + ',' + msg); // 成功后显示提示
         })
@@ -186,6 +191,7 @@ export default {
   bottom: 0;
   background: url("../assets/p3bg.svg");
   background-size: cover;
+  overflow: hidden;
 }
 .container {
   height: auto;
@@ -205,16 +211,17 @@ export default {
 
 .right-top {
   width: calc(50% - 0.25rem);
-  height: 70%;
-
+  height: 30%;
+  padding: 10px;
   box-sizing: border-box;
+  margin-top: -20px;
 }
 
 .left-bottom {
   width: calc(50% - 0.25rem);
   height: 60%;
-
   box-sizing: border-box;
+  /* border: 1px solid white; */
 }
 
 .right-bottom {
@@ -226,17 +233,25 @@ export default {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 0.125rem;
+  grid-gap: 0.01rem;
 }
 
 .grid-item {
   position: relative; /* 确保使用相对定位，便于控制内部元素 */
   overflow: hidden; /* 隐藏超出容器的图片部分 */
-  height: 1.6rem;
-  margin: 0.1rem;
+  height: 1.35rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.1rem;
   margin-left: 0.5rem;
 }
-
+.grid-item2 {
+  position: relative; /* 确保使用相对定位，便于控制内部元素 */
+  overflow: hidden; /* 隐藏超出容器的图片部分 */
+  height: 1.35rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.1rem;
+}
+.grid-item2 img,
 .grid-item img {
   width: 90%; /* 设置图片宽度为容器的100%，确保横向铺满 */
   height: 100%; /* 设置图片高度为容器的100%，确保纵向铺满 */
@@ -244,7 +259,7 @@ export default {
   cursor: pointer; /* 保留点击指针样式 */
   border-radius: 10px;
 }
-
+.grid-item2 .content,
 .grid-item .content {
   display: none;
   position: absolute;
@@ -258,15 +273,18 @@ export default {
   padding: 0.25rem;
   margin: 0.25rem;
 }
-
-.grid-item:hover .content {
+.grid-item2 .content,
+.grid-item .content {
   display: block;
 }
 
 #text-display {
   margin-top: 0.25rem;
   background-color: transparent;
-  padding: 0.125rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   font-size: 0.225rem;
   font-weight: bold;
   color: white;
@@ -293,6 +311,17 @@ export default {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   font-style: italic;
 }
+.grid-item2 .overlay-text,
+.grid-item2 .bottom-right-text {
+  position: absolute;
+  color: white;
+  padding: 10px;
+  background-color: transparent;
+  /* 设置文字大小为20px */
+  font-weight: bold; /* 文字加粗 */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-style: italic;
+}
 
 .grid-item .overlay-text {
   font-size: 50px;
@@ -302,6 +331,19 @@ export default {
 }
 
 .grid-item .bottom-right-text {
+  font-size: 30px;
+  bottom: 0;
+  right: 50px;
+  border-bottom-right-radius: 10px; /* 文字背景的右下角圆角 */
+}
+.grid-item2 .overlay-text {
+  font-size: 50px;
+  top: -25px;
+  left: 0px;
+  border-top-left-radius: 10px; /* 文字背景的左上角圆角 */
+}
+
+.grid-item2 .bottom-right-text {
   font-size: 30px;
   bottom: 0;
   right: 50px;

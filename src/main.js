@@ -24,7 +24,7 @@ const debounce = (fn, delay) => {
 
 const _ResizeObserver = window.ResizeObserver
 window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
-  constructor (callback) {
+  constructor(callback) {
     callback = debounce(callback, 200)
     super(callback)
   }

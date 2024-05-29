@@ -61,6 +61,7 @@ export default {
   bottom: 0;
   background: url("../assets/p2bg.svg");
   background-size: 100% auto;
+  overflow: hidden;
 }
 .container {
   margin: 0 auto;
@@ -89,10 +90,10 @@ export default {
 .timeselect-container {
   position: absolute;
   top: 0;
-  left: 25px;
-  transform: translate(150px, 20px);
+  left: 0px;
+  transform: translate(10px, 20px);
   margin-top: -10px; /* 调整上方间距 */
-  margin-right: -100px; /* 调整右侧间距 */
+  margin-right: 10px; /* 调整右侧间距 */
 }
 .map-container {
   margin-top: 50px;
